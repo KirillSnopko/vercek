@@ -1,7 +1,7 @@
-import gplay from "google-play-scraper";
+import gplay from 'google-play-scraper';
 
 // Define the endpoint
-module.exports = async = async (req, res) => {
+export default async (req, res) => {
     const { appid, country } = req.query;
 
     // Validate required parameter
@@ -17,7 +17,7 @@ module.exports = async = async (req, res) => {
             sort: gplay.sort.NEWEST,
             num: 1000
         });
-        
+
         console.log(reviews);
         res.json(reviews);
     } catch (err) {
