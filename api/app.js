@@ -1,3 +1,5 @@
+//https://github.com/facundoolano/google-play-scraper?tab=readme-ov-file#reviews
+
 import gplay from 'google-play-scraper';
 
 // Define the endpoint

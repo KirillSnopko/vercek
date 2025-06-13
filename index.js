@@ -1,3 +1,5 @@
+//https://github.com/facundoolano/google-play-scraper?tab=readme-ov-file#reviews
+
 import express from "express";
 //const gplay = require('google-play-scraper');
 const app = express();
