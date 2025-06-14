@@ -1,80 +1,4 @@
-//https://github.com/facundoolano/google-play-scraper?tab=readme-ov-file#reviews
-
-import gplay from 'google-play-scraper';
-import path from 'path';
-import fs from 'fs';
-
-// Define the endpoint
-export default async (req, res) => {
-    const { appid, country, lang } = req.query;
-
-    // Validate required parameter
-    if (!appid) {
-        return res.status(400).json({ error: 'Missing required parameter: appid' });
-    }
-
-    const options = {
-        num: 30,
-        sort: gplay.sort.NEWEST,
-        appId: appid,
-    };
-
-    if (country) options.country = country;
-    if (lang) {
-        options.lang = lang;
-
-        try {
-            const reviews = await gplay.reviews(options);
-            return res.json(reviews.data);
-        } catch (err) {
-            console.error(err);
-            return res.status(500).json({ error: 'Failed to fetch reviews' });
-        }
-
-    }
-
-   /* const filePath = 'languages.json';// path.join(__dirname, 'api', 'languages.json');
-    const rawData = fs.readFileSync(filePath, 'utf8');
-    var langs = JSON.parse(rawData);*/
-
-    const fetchPromises = languages.map(async (l) => {
-        const langOptions = { ...options, lang: l.code };
-        try {
-            const result = await gplay.reviews(langOptions);
-            return result.data || [];
-        } catch (err) {
-            console.error(`Error fetching reviews for ${l.code}:`, err.message);
-            return [];
-        }
-    });
-
-    try {
-        const results = await Promise.all(fetchPromises);
-        let allReviews = results.flat();
-                console.log(`Take ${allReviews.length} reviews`);
-        const seen = new Set();
-        allReviews = allReviews.filter(review => {
-            if (!seen.has(review.id)) {
-                seen.add(review.id);
-                return true;
-            }
-            return false;
-        });
-
-        // Sort by newest date
-        allReviews.sort((a, b) => new Date(b.date) - new Date(a.date));
-        console.log(`Filter ${allReviews.length} reviews`);
-        const reviews = {
-            data: allReviews
-        };
-        res.json(reviews);
-    } catch (err) {
-        console.error('Error during parallel fetching:', err);
-        res.status(500).json({ error: 'Failed to fetch reviews' });
-    }
-};
-
-const languages = [
+[
   {"code": "aa", "language": "Afar"},
   {"code": "ab", "language": "Abkhazian"},
   {"code": "af", "language": "Afrikaans"},
@@ -225,4 +149,3 @@ const languages = [
   {"code": "zh", "language": "Chinese"},
   {"code": "zu", "language": "Zulu"}
 ]
-
